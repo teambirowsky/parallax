@@ -23,16 +23,16 @@ Of course you can also simply copy over the compiled file from the `dist` folder
 <script src="dist/parallax.min.js"></script>
 ```
 
-Create a list of elements giving each item that you want to move within your parallax scene a class of `layer` and a `data-depth` attribute specifying its depth within the scene. A depth of **0** will cause the layer to remain stationary, and a depth of **1** will cause the layer to move by the total effect of the calculated motion. Values inbetween **0** and **1** will cause the layer to move by an amount relative to the supplied ratio.
+Give each element within your scene a `data-depth` attribute specifying its depth within the scene. A depth of **0** will cause the layer to remain stationary, and a depth of **1** will cause the layer to move by the total effect of the calculated motion. Values inbetween **0** and **1** will cause the layer to move by an amount relative to the supplied ratio.
 
 ```html
 <div id="scene">
-  <div class="layer" data-depth="0.00"><img src="layer1.png"></div>
-  <div class="layer" data-depth="0.20"><img src="layer2.png"></div>
-  <div class="layer" data-depth="0.40"><img src="layer3.png"></div>
-  <div class="layer" data-depth="0.60"><img src="layer4.png"></div>
-  <div class="layer" data-depth="0.80"><img src="layer5.png"></div>
-  <div class="layer" data-depth="1.00"><img src="layer6.png"></div>
+  <div data-depth="0.00"><img src="layer1.png"></div>
+  <div data-depth="0.20"><img src="layer2.png"></div>
+  <div data-depth="0.40"><img src="layer3.png"></div>
+  <div data-depth="0.60"><img src="layer4.png"></div>
+  <div data-depth="0.80"><img src="layer5.png"></div>
+  <div data-depth="1.00"><img src="layer6.png"></div>
 </div>
 ```
 
@@ -82,6 +82,7 @@ There are a number of behaviours that you can setup for any given **Parallax** i
 | `relativeInput`     | `true` or `false`   | `false`       | Specifies whether or not to use the coordinate system of the scene. **Mouse input only.**                                                            |
 | `clipRelativeInput` | `true` or `false`   | `false`       | Specifies whether or not to clip the mouse input to the scene bounds. No effect in combination with `hoverOnly`. **Mouse input only.**               |
 | `hoverOnly`         | `true` or `false`   | `false`       | Apply the parallax effect only while the cursor is over the scene. Best together with `relativeInput` set to true. **Mouse input only.**             |
+| `inputElement`         | `null` or HTML element   | `null`       | Element used for input calculations. Works only with `relativeInput`, might make sense to set `hoverOnly`. When set via `data-input-element` attribute, takes a query selector. **Mouse input only.** |
 | `calibrate-x`       | `true` or `false`   | `false`       | Specifies whether or not to cache & calculate the motion relative to the initial `x` axis value on initialisation.                                   |
 | `calibrate-y`       | `true` or `false`   | `true`        | Specifies whether or not to cache & calculate the motion relative to the initial `y` axis value on initialisation.                                   |
 | `invert-x`          | `true` or `false`   | `true`        | `true` moves layers in opposition to the device motion, `false` slides them away.                                                                    |
@@ -96,6 +97,7 @@ There are a number of behaviours that you can setup for any given **Parallax** i
 | `origin-y`          | `number`            | `0.5`         | The `y` origin of the mouse input. Defaults to 0.5 (the center). `0` moves the origin to the top edge, `1` to the bottom edge. **Mouse input only.** |
 | `precision`         | `integer`           | `1`           | Decimals the element positions should be rounded to. Changing this value should not be necessary anytime soon.                                       |
 | `pointerEvents`     | `true` or `false`   | `false`       | Leaving this at false might increase the performance in some instances, while removing pointer events for the scene - eg, Links are not clickable    |
+| `onReady`     | `null` or `function`   | `null`       | Function that will be called as soon as Parallax setup is completed. Might take up to 1000ms (`calibrationDelay * 2`)    |
 
 In addition to the behaviours described above, there are the methods `enable()` and `disable()` that *activate* and *deactivate* the **Parallax** instance respectively.
 
@@ -106,6 +108,7 @@ In addition to the behaviours described above, there are the methods `enable()` 
   data-relative-input="true"
   data-clip-relative-input="false"
   data-hover-only="true"
+  data-input-element="#myinput"
   data-calibrate-x="false"
   data-calibrate-y="true"
   data-invert-x="false"
@@ -120,12 +123,12 @@ In addition to the behaviours described above, there are the methods `enable()` 
   data-origin-y="1.0"
   data-precision="1"
   data-pointer-events="false">
-  <div class="layer" data-depth="0.00"><img src="graphics/layer1.png"></div>
-  <div class="layer" data-depth="0.20"><img src="graphics/layer2.png"></div>
-  <div class="layer" data-depth="0.40"><img src="graphics/layer3.png"></div>
-  <div class="layer" data-depth="0.60"><img src="graphics/layer4.png"></div>
-  <div class="layer" data-depth="0.80"><img src="graphics/layer5.png"></div>
-  <div class="layer" data-depth="1.00"><img src="graphics/layer6.png"></div>
+  <div data-depth="0.00"><img src="graphics/layer1.png"></div>
+  <div data-depth="0.20"><img src="graphics/layer2.png"></div>
+  <div data-depth="0.40"><img src="graphics/layer3.png"></div>
+  <div data-depth="0.60"><img src="graphics/layer4.png"></div>
+  <div data-depth="0.80"><img src="graphics/layer5.png"></div>
+  <div data-depth="1.00"><img src="graphics/layer6.png"></div>
 </div>
 ```
 
@@ -137,6 +140,7 @@ var parallax = new Parallax(scene, {
   relativeInput: true,
   clipRelativeInput: false,
   hoverOnly: true,
+  inputElement: document.getElementById('myinput'),
   calibrateX: false,
   calibrateY: true,
   invertX: false,
@@ -150,7 +154,8 @@ var parallax = new Parallax(scene, {
   originX: 0.0,
   originY: 1.0,
   precision: 1,
-  pointerEvents: false
+  pointerEvents: false,
+  onReady: function() { alert('ready!'); }
 });
 ```
 
@@ -168,6 +173,7 @@ parallax.limit(false, 10);
 parallax.scalar(2, 8);
 parallax.friction(0.2, 0.8);
 parallax.origin(0.0, 1.0);
+parallax.setInputElement(document.getElementById('newinput'));
 ```
 
 ## iOS

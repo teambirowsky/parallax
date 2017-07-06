@@ -4,7 +4,7 @@
 
   <meta charset="utf-8">
 
-  <title>Parallax.js | Relative Example</title>
+  <title>Parallax.js | Input Element Example</title>
 
   <!-- Behavioral Meta Data -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,8 +16,8 @@
 </head>
 <body>
 
-  <div id="container" class="container container--offset">
-    <div id="scene" class="scene border">
+  <div class="container" style="float:left">
+    <div id="scene" class="scene border" data-input-element="#scene-input">
       <div data-depth="1.00"><img src="images/layer1.png"></div>
       <div data-depth="0.80"><img src="images/layer2.png"></div>
       <div data-depth="0.60"><img src="images/layer3.png"></div>
@@ -25,11 +25,12 @@
       <div data-depth="0.20"><img src="images/layer5.png"></div>
       <div data-depth="0.00"><img src="images/layer6.png"></div>
     </div>
-    <br>
-    <input type="checkbox" id="relative" checked>
-    <label for="relative">relativeInput</label>
-    <input type="checkbox" id="clip">
-    <label for="clip">clipRelativeInput</label>
+  </div>
+
+  <div class="container" style="float:right">
+    <div id="scene-input" class="scene border">
+      <div><img src="images/layer6.png"></div>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -38,22 +39,15 @@
 
   // Elements
   var scene = document.getElementById('scene');
-  var clipCheckbox = document.getElementById('clip');
-  var relativeCheckbox = document.getElementById('relative');
+  var input = document.getElementById('scene-input');
 
   // Pretty simple huh?
   var parallax = new Parallax(scene, {
-    relativeInput: relativeCheckbox.checked,
-    clipRelativeInput: clipCheckbox.checked
+    hoverOnly: true,
+    relativeInput: true,
+    inputElement: input
   });
 
-  relativeCheckbox.addEventListener('change', function(event) {
-    parallax.relativeInput = relativeCheckbox.checked;
-  });
-
-  clipCheckbox.addEventListener('change', function(event) {
-    parallax.clipRelativeInput = clipCheckbox.checked;
-  });
 
   </script>
 
